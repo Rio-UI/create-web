@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Web App Generator</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.3/codemirror.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.3/theme/github.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.3/codemirror.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.3/mode/javascript/javascript.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.3/mode/css/css.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.3/mode/htmlmixed/htmlmixed.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.3/mode/xml/xml.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body class="bg-gray-50 text-gray-900 h-screen flex flex-col overflow-hidden">
+    <!-- Header -->
+    <header class="bg-white border-b border-gray-200 py-3 px-4 flex justify-between items-center">
+        <div class="flex items-center">
+            <h1 class="text-xl font-semibold">Create Web App</h1>
+        </div>
+        <div class="flex items-center space-x-4">
+            <button id="settingsBtn" class="flex items-center text-gray-600 hover:text-gray-900 transition">
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-1"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
+                Settings
+            </button>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="flex-1 flex overflow-hidden">
+        <!-- Left Panel: Code Editor -->
+        <div class="w-1/2 border-r border-gray-200 flex flex-col">
+            <div class="border-b border-gray-200 bg-white p-3 flex justify-between items-center">
+                <div class="flex space-x-3">
+                    <button id="htmlTabBtn" class="px-3 py-1 text-sm font-medium rounded-md bg-gray-100 text-gray-900">HTML</button>
+                    <button id="cssTabBtn" class="px-3 py-1 text-sm font-medium rounded-md text-gray-600 hover:text-gray-900">CSS</button>
+                    <button id="jsTabBtn" class="px-3 py-1 text-sm font-medium rounded-md text-gray-600 hover:text-gray-900">JavaScript</button>
+                </div>
+                <button id="downloadBtn" class="flex items-center text-sm text-gray-600 hover:text-gray-900 transition">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-1"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+                    Download
+                </button>
+            </div>
+            <div id="codeEditor" class="flex-1 overflow-hidden"></div>
+        </div>
+
+        <!-- Right Panel: Preview -->
+        <div class="w-1/2 flex flex-col">
+            <div class="border-b border-gray-200 bg-white p-3 flex justify-between items-center">
+                <h2 class="text-sm font-medium">Preview</h2>
+                <button id="fullscreenBtn" class="flex items-center text-sm text-gray-600 hover:text-gray-900 transition">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-1"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"></path></svg>
+                    Fullscreen
+                </button>
+            </div>
+            <div class="flex-1 overflow-hidden bg-white">
+                <iframe id="previewFrame" class="w-full h-full border-0"></iframe>
+            </div>
+        </div>
+    </main>
+
+    <!-- Bottom Input -->
+    <div class="fixed bottom-4 left-1/2 transform -translate-x-1/2 w-full max-w-3xl flex px-4">
+        <div class="flex-1 bg-white rounded-lg shadow-lg border border-gray-200 overflow-hidden">
+            <textarea id="promptInput" class="w-full p-4 outline-none resize-none h-24" placeholder="Describe the web page you want to generate..."></textarea>
+            <div class="bg-gray-50 p-3 border-t border-gray-200 flex justify-between items-center">
+                <div class="text-xs text-gray-500">
+                    Configured API: <span id="configuredApiText">Not set</span>
+                </div>
+                <button id="generateBtn" class="px-4 py-2 bg-gray-900 text-white rounded-md hover:bg-gray-800 transition font-medium flex items-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-1"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
+                    Generate
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Settings Modal -->
+    <div id="settingsModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden z-50">
+        <div class="bg-white rounded-lg shadow-xl w-full max-w-md p-6">
+            <div class="flex justify-between items-center mb-6">
+                <h2 class="text-xl font-semibold">API Settings</h2>
+                <button id="closeSettingsBtn" class="text-gray-400 hover:text-gray-600">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                </button>
+            </div>
+            
+            <div class="space-y-4">
+                <div>
+                    <label for="apiProvider" class="block text-sm font-medium text-gray-700 mb-1">API Provider</label>
+                    <select id="apiProvider" class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-1 focus:ring-gray-900 focus:border-gray-900">
+                        <option value="openai">OpenAI</option>
+                        <option value="anthropic">Anthropic</option>
+                        <option value="custom">Custom Provider</option>
+                    </select>
+                </div>
+                
+                <div id="customProviderField" class="hidden">
+                    <label for="customProviderName" class="block text-sm font-medium text-gray-700 mb-1">Custom Provider Name</label>
+                    <input type="text" id="customProviderName" class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-1 focus:ring-gray-900 focus:border-gray-900" placeholder="Enter provider name">
+                </div>
+                
+                <div>
+                    <label for="apiEndpoint" class="block text-sm font-medium text-gray-700 mb-1">API Endpoint</label>
+                    <input type="text" id="apiEndpoint" class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-1 focus:ring-gray-900 focus:border-gray-900" placeholder="https://api.example.com/v1/chat/completions">
+                </div>
+                
+                <div>
+                    <label for="apiKey" class="block text-sm font-medium text-gray-700 mb-1">API Key</label>
+                    <input type="password" id="apiKey" class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-1 focus:ring-gray-900 focus:border-gray-900" placeholder="sk-...">
+                </div>
+                
+                <div>
+                    <label for="modelName" class="block text-sm font-medium text-gray-700 mb-1">Model Name</label>
+                    <input type="text" id="modelName" class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-1 focus:ring-gray-900 focus:border-gray-900" placeholder="gpt-4">
+                </div>
+            </div>
+            
+            <div class="mt-6 flex justify-end">
+                <button id="saveSettingsBtn" class="px-4 py-2 bg-gray-900 text-white rounded-md hover:bg-gray-800 transition font-medium">Save Settings</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Fullscreen Preview Modal -->
+    <div id="fullscreenModal" class="fixed inset-0 bg-white z-50 hidden flex flex-col">
+        <div class="p-3 border-b border-gray-200 flex justify-between items-center">
+            <h2 class="text-sm font-medium">Fullscreen Preview</h2>
+            <button id="closeFullscreenBtn" class="flex items-center text-sm text-gray-600 hover:text-gray-900 transition">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-1"><path d="M9 9V4H4v5h5z"></path><path d="M9 20v-5H4v5h5z"></path><path d="M20 9V4h-5v5h5z"></path><path d="M20 20v-5h-5v5h5z"></path></svg>
+                Exit Fullscreen
+            </button>
+        </div>
+        <div class="flex-1 overflow-hidden">
+            <iframe id="fullscreenFrame" class="w-full h-full border-0"></iframe>
+        </div>
+    </div>
+
+    <!-- Loading Overlay -->
+    <div id="loadingOverlay" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden z-50">
+        <div class="bg-white rounded-lg p-6 flex flex-col items-center">
+            <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-gray-900 mb-4"></div>
+            <p class="text-gray-700">Generating your web page...</p>
+        </div>
+    </div>
+
+    <script src="apiService.js"></script>
+    <script src="codeMirror.js"></script>
+    <script src="fileDownloader.js"></script>
+    <script src="settings.js"></script>
+    <script src="app.js"></script>
+    
+    <script>
+        window.addEventListener("wheel", (e)=> {
+            const isPinching = e.ctrlKey
+            if(isPinching) e.preventDefault()
+        }, { passive: false })
+    </script>
+</body>
+</html>

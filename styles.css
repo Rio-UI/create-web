@@ -1,0 +1,77 @@
+/* Custom scrollbar */
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #d1d1d1;
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #b1b1b1;
+}
+
+/* CodeMirror customization */
+.CodeMirror {
+    height: 100%;
+    font-family: 'SF Mono', 'Monaco', 'Menlo', 'Consolas', 'Courier New', monospace;
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+.CodeMirror-gutters {
+    border-right: 1px solid #eee;
+}
+
+/* Styling for active tab button */
+.active-tab {
+    background-color: #f3f4f6 !important;
+    color: #111827 !important;
+    font-weight: 500;
+}
+
+/* Font for monospace text */
+.font-geist-mono {
+    font-family: 'SF Mono', 'Monaco', 'Menlo', 'Consolas', 'Courier New', monospace;
+}
+
+/* Textarea focus outline */
+#promptInput:focus {
+    box-shadow: 0 0 0 2px rgba(17, 24, 39, 0.1);
+}
+
+/* Button hover effects */
+button:focus {
+    outline: none;
+}
+
+/* Animation for loading spinner */
+@keyframes spin {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.animate-spin {
+    animation: spin 1s linear infinite;
+}
+
+/* Transitions for modal */
+.modal-transition {
+    transition: opacity 0.2s ease-in-out;
+}
+
+/* Input and button focus styles */
+input:focus, select:focus, button:focus {
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(17, 24, 39, 0.1);
+}
